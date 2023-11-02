@@ -1,23 +1,18 @@
-name: Deploy to App Engine
+runtime: nodejs14  # Ganti dengan versi runtime Node.js yang sesuai
 
-on:
-  push:
-    branches:
-      - main
+instance_class: F1  # Ganti dengan tipe instance yang sesuai
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+handlers:
+- url: /img
+  static_dir: public/img
 
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.1
-        with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCLOUD_AUTH }}
-          export_default_credentials: true
+- url: /style.css
+  static_files: public/style.css
+  upload: public/style.css
 
-      - name: Deploy to App Engine
-        run: gcloud app deploy app.yaml --quiet
+- url: /index.html
+  static_files: public/index.html
+  upload: public/index.html
+
+- url: /.*
+  script: auto
